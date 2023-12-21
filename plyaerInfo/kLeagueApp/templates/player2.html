@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{team}} {{name}}</title>
+    <link id="favicon" rel="icon" href="/static/teamlogo/gangwon.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+        body {
+            background-image: url("/static/player_backIMG.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .home_button img {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .home_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+
+        .back_button img {
+            position: absolute;
+            left: 70px;
+            top: 30px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .back_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+
+        .top {
+            display: flex;
+            width: 100%;
+            height: 50%;
+        }
+
+        top-left {
+            background-color: rgba(0, 100, 50, 0); /* Adjust the color as needed */
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .top-left img {
+            /*position: relative; !* Set image position to relative *!*/
+            /*max-width: 50%; !* You can adjust this valu*/
+            max-width: 48%;
+            max-height: 100%;
+        }
+
+        .top-center {
+            background-color: rgba(120, 0, 50, 0.0); /* Adjust the color as needed */
+            color: white;
+            padding: 20px;
+            flex: 1;
+        }
+
+
+        .bottom {
+            display: flex;
+            width: 100%;
+            height: 50%;
+        }
+
+        .bottom-left {
+            background-color: rgba(12, 148, 19, 0.0); /* Adjust the color as needed */
+            color: white;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .bottom-right {
+            background-color: rgba(44, 40, 40, 0.0); /* Adjust the color as needed */
+            color: white;
+            padding: 20px;
+            flex: 1;
+        }
+       .custom-table {
+           width: 100%;
+           height: 100%;
+           border-collapse: collapse;
+           font-size: 20px;
+           color: #8e8e8e;
+           border-radius: 70px; /* Adjust the radius as needed */
+           overflow: hidden; /* Hide the overflowing content */
+           border-color: rgba(49, 46, 46, 0.8);
+           box-shadow: 2px 2px 20px #858383;
+           transition: 0.3s;
+       }
+        .custom-table td {
+            border: 3px solid #181818;
+            padding: 2px;
+            text-align: center;
+        }
+
+        /* Style odd-numbered columns */
+        .custom-table td:nth-child(odd) {
+            background-color: rgba(49, 46, 46, 0.8); /* Bright black color */
+        }
+
+        /* Style even-numbered columns */
+        .custom-table td:nth-child(even) {
+            background-color: rgba(11, 11, 11, 0.8); /* Gray color */
+}
+        .custom-table2 {
+            width: 100%;
+           height: 100%;
+           border-collapse: collapse;
+           font-size: 20px;
+           color: #8e8e8e;
+           /*border-radius: 30px; !* Adjust the radius as needed *!*/
+           overflow: hidden; /* Hide the overflowing content */
+           border-color: rgba(49, 46, 46, 0.8);
+           box-shadow: 2px 2px 30px #858383;
+           transition: 0.3s;
+       }
+        .custom-table2 td {
+            border: 3px solid #181818;
+            padding: 2px;
+            text-align: center;
+        }
+        /* Style odd-numbered columns */
+        .custom-table2 td:nth-child(odd) {
+            background-color: rgba(49, 46, 46, 0.8); /* Bright black color */
+        }
+
+        /* Style even-numbered columns */
+        .custom-table2 td:nth-child(even) {
+            background-color: rgba(11, 11, 11, 0.8); /* Gray color */
+}
+        .custom-table3 {
+            width: 100%;
+           height: 120%;
+           border-collapse: collapse;
+           font-size: 25px;
+           color: #8e8e8e;
+           /*border-radius: 30px; !* Adjust the radius as needed *!*/
+           overflow: hidden; /* Hide the overflowing content */
+           border-color: rgba(49, 46, 46, 0.8);
+           box-shadow: 2px 2px 20px #858383;
+           transition: 0.3s;
+       }
+        .custom-table3 td {
+            border: 3px solid #181818;
+            padding: 2px;
+            text-align: center;
+        }
+        /* Style odd-numbered columns */
+        .custom-table3 td:nth-child(odd) {
+            background-color: rgba(49, 46, 46, 0.8); /* Bright black color */
+        }
+
+        /* Style even-numbered columns */
+        .custom-table3 td:nth-child(even) {
+            background-color: rgba(11, 11, 11, 0.8); /* Gray color */
+        }
+        .stat {
+            text-decoration: underline;
+            color: #8e8e8e;
+        }
+        .stat:hover{
+            background-color: rgba(24, 24, 24, 0);
+            box-shadow: 2px 2px 25px #e8e8a2;
+            transition: 1s;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="home_button">
+        <a href="{{ url_for('searchPage')}}">
+            <img src="/static/homeLogo4.png" alt="Home">
+        </a>
+    </div>
+    <div class="back_button">
+        <a href="{{ url_for('show3Players',text=text)}}">
+                <img src="/static/backLogo.png" alt="Home">
+        </a>
+
+
+    </div>
+    <div class="top">
+        <div class="top-left">
+            <img src="" alt="Favicon" class="favicon-image" style="max-width: 50%; max-height: 100%;">
+            <img src="{{basicInfo.iloc[0,-1]}}" alt="Your Image">
+        </div>
+        <div class="top-center">
+            <table class="custom-table">
+                <tr>
+                    <td>이름</td>
+                    <td>{{basicInfo.iloc[0,0]}}</td>
+                    <td>영문명</td>
+                    <td>{{basicInfo.iloc[0,1]}}</td>
+                </tr>
+                <tr>
+                    <td>소속</td>
+                    <td>{{basicInfo.iloc[0,2]}}</td>
+                    <td>포지션</td>
+                    <td>{{basicInfo.iloc[0,3]}}</td>
+                </tr>
+                <tr>
+                    <td>등번호</td>
+                    <td>{{basicInfo.iloc[0,4]}}</td>
+                    <td>국적</td>
+                    <td>{{basicInfo.iloc[0,5]}}</td>
+                </tr>
+                <tr>
+                    <td>키</td>
+                    <td>{{basicInfo.iloc[0,6]}}</td>
+                    <td>몸무게</td>
+                    <td>{{basicInfo.iloc[0,7]}}</td>
+                </tr>
+                <tr>
+                    <td>생년월일</td>
+                    <td>{{basicInfo.iloc[0,8]}}</td>
+                    <td>비고</td>
+                    <td>
+                        <a href="{{url_for('show_similar_playe2',teamname=team, player=name,text=text)}}" class="stat">스탯 비교</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="bottom">
+    <div class="bottom-left">
+        <div style="height: 80%; overflow-y: scroll;">
+            <table class="custom-table2">
+                <thead>
+                    <tr>
+                        <th>연도</th>
+                        <th>리그</th>
+                        <th>소속</th>
+                        <th>출장</th>
+                        <th>득점</th>
+                        <th>도움</th>
+                        <th>경고</th>
+                        <th>퇴장</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for idx in range(lenRecord) %}
+                    <tr>
+                        <td>{{ record.iloc[idx,0] }}</td>
+                        <td>{{ record.iloc[idx,1] }}</td>
+                        <td>{{ record.iloc[idx,2] }}</td>
+                        <td>{{ record.iloc[idx,3] }}</td>
+                        <td>{{ record.iloc[idx,4] }}</td>
+                        <td>{{ record.iloc[idx,5] }}</td>
+                        <td>{{ record.iloc[idx,-2] }}</td>
+                        <td>{{ record.iloc[idx,-1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div style="height: -20%; overflow-y: scroll;">
+            <table class="custom-table3">
+                <tbody>
+                    <tr>
+                        <td>통산 출장</td>
+                        <td>{{ totalRecord.loc['출장',0] }}</td>
+                        <td>통산 득점</td>
+                        <td>{{ totalRecord.loc['득점',0]  }}</td>
+                        <td>통산 도움</td>
+                        <td>{{ totalRecord.loc['도움',0]  }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="bottom-right">
+        <!-- Content for the bottom-right section -->
+        <canvas id="lineChart" width="100%" height="100%"></canvas>
+    </div>
+</div>
+
+</body>
+<script>
+    var teamname = "{{team}}";
+    var favicon = document.getElementById("favicon");
+    var leftColumnImage = document.querySelector(".top-left img");
+    if (teamname === "강원") {
+        favicon.href = "/static/teamlogo/gangwon.png";
+    } else if (teamname === "대구") {
+        favicon.href = "/static/teamlogo/daegu.png";
+    } else if (teamname === "대전") {
+        favicon.href = "/static/teamlogo/daejeon.png";
+    } else if (teamname === "인천") {
+        favicon.href = "/static/teamlogo/incheon.png";
+    } else if (teamname === "제주") {
+        favicon.href = "/static/teamlogo/jeju.png";
+    } else if (teamname === "전북") {
+        favicon.href = "/static/teamlogo/jeonbuk.png";
+    } else if (teamname === "광주") {
+        favicon.href = "/static/teamlogo/kwangju.png";
+    } else if (teamname === "포항") {
+        favicon.href = "/static/teamlogo/pohang.png";
+    } else if (teamname === "서울") {
+        favicon.href = "/static/teamlogo/seoul.png";
+    } else if (teamname === "수원") {
+        favicon.href = "/static/teamlogo/suwon.png";
+    } else if (teamname === "수원FC") {
+        favicon.href = "/static/teamlogo/suwonFC.png";
+    } else if (teamname === "울산") {
+        favicon.href = "/static/teamlogo/ulsan.png";
+    }
+    leftColumnImage.src = favicon.href;
+
+    // Get the data from your DataFrame (you may need to pass it to your HTML)
+    var years = {{ record['연도'].to_json(orient='values') | safe }};
+    var appearances = {{ record['출장'].to_json(orient='values') | safe }};
+    var goals = {{ record['득점'].to_json(orient='values') | safe }};
+    var assists = {{ record['도움'].to_json(orient='values') | safe }};
+
+    years.reverse();
+    appearances.reverse();
+    goals.reverse();
+    assists.reverse();
+
+    // Verify the data is correctly loaded
+    console.log(years);
+    console.log(appearances);
+    console.log(goals);
+    console.log(assists);
+
+    var ctx = document.getElementById('lineChart').getContext('2d');
+
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: years,
+            datasets: [{
+                label: '출장',
+                borderColor: 'rgb(75, 192, 192)',
+                data: appearances,
+                fill: false,
+            }, {
+                label: '득점',
+                borderColor: 'rgb(255, 99, 132)',
+                data: goals,
+                fill: false,
+            }, {
+                label: '도움',
+                borderColor: 'rgb(54, 162, 235)',
+                data: assists,
+                fill: false,
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: '연도',
+                    font: {
+                        size: 20 // Adjust the size of x-axis label
+                    }
+                },
+                ticks: {
+                    font: {
+                        size: 20 // Adjust the size of x-axis values
+                    }
+                },
+                 grid: {
+                    display: true // Show y-axis grid lines
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Count',
+                    font: {
+                        size: 20 // Adjust the size of y-axis label
+                    }
+                },
+                ticks: {
+                    font: {
+                        size: 20 // Adjust the size of y-axis values
+                    }
+                },
+                 grid: {
+                    display: true // Show y-axis grid lines
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    font: {
+                        size: 18 // Adjust the size of legend labels
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+</html>

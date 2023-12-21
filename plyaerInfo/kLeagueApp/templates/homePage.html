@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>K LEAGUE</title>
+    <link rel="icon" href="/static/kLogo.png" type="image/png">
+    <style>
+        body {
+            background-image: url("/static/k_league_LOGO.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+
+        .ocean {
+            height: 5%;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #030E3AFF;
+        }
+
+        .wave {
+            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+            position: absolute;
+            width: 6400px;
+            top: -100px; /* Adjust this value to move the waves lower */
+            left: 0;
+            height: 198px;
+            transform: translate(0, 0, 0);
+            animation: wave 10s ease infinite;
+        }
+
+        .wave:nth-of-type(2) {
+            top: -70px; /* Adjust this value for the second wave */
+            animation: swell 10s ease infinite;
+            opacity: 1;
+        }
+
+        @keyframes wave {
+            0% { margin-left: 0; }
+            100% { margin-left: -1600px; }
+        }
+
+        @keyframes swell {
+            0%, 100% {
+                transform: translate(0, -30px);
+            }
+            50% {
+                transform: translate(0, 5px);
+            }
+        }
+
+        .content, .team-select-button, .search-bar {
+            background-color:#4DA8A5F7;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            height: 0;
+            max-height: 350px;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: height 3s, opacity 3s;
+            opacity: 0;
+        }
+
+        .team-select-button, .search-bar {
+            opacity: 0;
+            transition: opacity 3s;
+        }
+
+        .team-select-button, .search-bar input[type="text"] {
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            font-size: 25px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .team-select-button {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 60px;
+            background-color: #519d72;
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            border-radius: 7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .team-select-button:hover {
+            background-color: #5f5fe5;
+            box-shadow: 2px 2px 25px #e8e8a2;
+            transition: 1s;
+        }
+
+        .team-select-button:active {
+             background-color: #015cbd;
+        }
+
+        .team-select-button a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 50px;
+            margin: 0;
+        }
+
+        .search-bar input[type="text"] {
+            text-align: center;
+            width: 150%;
+            padding: 10px;
+            font-size: 25px;
+            border: 1px solid #ccc;
+        }
+
+        .search-bar button {
+            display: none;
+        }
+
+        .search-results {
+            margin-top: 10px;
+            font-size: 18px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class "wave"></div>
+    </div>
+    <div class="content">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="알고 싶은 선수의 정보를 입력해주세요">
+        </div>
+        <button class="team-select-button" id="searchButton">
+            <a href="{{ url_for('firstPage')}}">팀 선택</a>
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Function to handle the content animation
+        function animateContent() {
+            const content = document.querySelector('.content');
+            content.style.height = '350px';
+            content.style.opacity = '1';
+
+            const teamSelectButton = document.querySelector('.team-select-button');
+            teamSelectButton.style.opacity = '1';
+
+            const searchBar = document.querySelector('.search-bar');
+            searchBar.style.opacity = '1';
+        }
+
+        // Call the animation function when the page loads
+        window.onload = animateContent;
+
+        // Function to handle the search when the Enter key is pressed in the input field
+        document.getElementById('searchInput').addEventListener('keyup', function (event) {
+        if (event.key === "Enter") {
+            const searchTerm = document.getElementById('searchInput').value;
+            // Redirect to the show3Players route with the search term as a parameter
+            window.location.href = `/threePlayer/${searchTerm}`;
+        }
+    });
+    </script>
+</body>
+</html>

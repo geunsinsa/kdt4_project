@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{teamname}}</title>
+    <link id="favicon" rel="icon" href="/static/teamlogo/gangwon.png" type="image/x-icon">
+    <style>
+        body {
+            background-image: url("/static/k_league_LOGO.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .ocean {
+            height: 5%;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #030E3AFF;
+        }
+
+        .wave {
+            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+            position: absolute;
+            width: 6400px;
+            top: -100px; /* Adjust this value to move the waves lower */
+            left: 0;
+            height: 198px;
+            transform: translate(0, 0, 0);
+            animation: wave 10s ease infinite;
+        }
+
+        .wave:nth-of-type(2) {
+            top: -70px; /* Adjust this value for the second wave */
+            animation: swell 10s ease infinite;
+            opacity: 1;
+        }
+
+        @keyframes wave {
+            0% { margin-left: 0; }
+            100% { margin-left: -1600px; }
+        }
+
+        @keyframes swell {
+            0%, 100% {
+                transform: translate(0, -30px);
+            }
+            50% {
+                transform: translate(0, 5px);
+            }
+        }
+        .content {
+            /*background-color: rgba(24, 40, 121, 0.97);*/
+            background-color:#4DA8A5F7;
+            padding: 20px;
+            width: 80%;
+            height: 80%;
+            border-radius: 50px;
+            display: flex;
+        }
+        .left-column {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column; /* Change to a column layout */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+        .left-column h1 {
+            font-size: 70px; /* Adjust the font size as needed */
+            color: white; /* Set the text color to white */
+            margin-bottom: 5px; /* Adjust the margin if needed */
+        }
+        .right-column {
+            flex: 1;
+            padding: 10px;
+            overflow: auto; /* Add a scrollbar when content overflows */
+            max-height: 80vh; /* Set a maximum height for the scrollable area */
+        }
+        .left-column img {
+            position: relative; /* Set image position to relative */
+            max-width: 100%; /* You can adjust this value to make the image larger */
+        }
+        .favicon-image {
+            max-width: 100%; /* You can adjust this value to make the image larger */
+        }
+        .player-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Adjust the gap between cards as needed */
+            justify-content: space-between; /* Distribute cards evenly */
+        }
+        /* Style for each player card */
+        .player-card {
+            border:1px solid white;
+            background-color: #519d72;
+            color: white;
+            padding: 20px; /* Reduce the padding to make the card smaller */
+            width: calc(33.33% - 20px); /* Set the width for 3 cards in a row with gap */
+            border-radius: 15px;
+            box-sizing: border-box;
+            font-size: 20px; /* Keep the text size */
+            margin-bottom: 10px; /* Adjust the margin between rows as needed */
+            text-align: center; /* Center-align the text */
+        }
+        .player-card:hover {
+            background-color: #5f5fe5;
+            box-shadow: 2px 2px 25px #e8e8a2;
+            transition: 0.3s;
+            /*text-decoration: underline; !* Remove the underline from links *!*/
+            color: white; /* Set the color to white */
+        }
+        .player-card:active {
+            background-color: #015cbd;
+        }
+        .player-card a {
+            color: white; /* Set the color to white */
+            text-decoration: none; /* Remove the underline from links */
+        }
+        .home_button img {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            height: 30px; /* Adjust the height as needed */
+            width: 30px;  /* Adjust the width as needed */
+        }
+        .home_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+        .back_button img {
+            position: absolute;
+            left: 70px;
+            top: 30px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .back_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <div class="home_button">
+        <a href="{{ url_for('searchPage') }}">
+            <img src="/static/homeLogo4.png" alt="Home">
+        </a>
+    </div>
+    <div class="back_button">
+        <a href="{{ url_for('firstPage')}}">
+            <img src="/static/backLogo.png" alt="Home">
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="left-column">
+            <h1>{{ teamname }}</h1>
+            <img src="" alt="Favicon" class="favicon-image">
+        </div>
+        <div class="right-column">
+            <div class="player-cards">
+                {% for player in team_player_name %}
+                    <div class="player-card">
+                        <a href="{{ url_for('showPlayerInfo', teamname=teamname, player=player[2]) }}">{{ player[0] }} {{ player[2] }}</a>
+                        <!-- <p >{{ player[0] }} {{ player[2] }}</p> -->
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Assuming teamname is a variable that holds the desired image path
+        var teamname = "{{teamname}}";
+        var favicon = document.getElementById("favicon");
+        var leftColumnImage = document.querySelector(".left-column img");
+
+        // Set the src attribute of the left column image to match the favicon href
+
+        // Update the favicon based on the teamname
+        if (teamname === "강원") {
+            favicon.href = "/static/teamlogo/gangwon.png";
+        } else if (teamname === "대구") {
+            favicon.href = "/static/teamlogo/daegu.png";
+        } else if (teamname === "대전") {
+            favicon.href = "/static/teamlogo/daejeon.png";
+        } else if (teamname === "인천") {
+            favicon.href = "/static/teamlogo/incheon.png";
+        } else if (teamname === "제주") {
+            favicon.href = "/static/teamlogo/jeju.png";
+        } else if (teamname === "전북") {
+            favicon.href = "/static/teamlogo/jeonbuk.png";
+        } else if (teamname === "광주") {
+            favicon.href = "/static/teamlogo/kwangju.png";
+        } else if (teamname === "포항") {
+            favicon.href = "/static/teamlogo/pohang.png";
+        } else if (teamname === "서울") {
+            favicon.href = "/static/teamlogo/seoul.png";
+        } else if (teamname === "수원") {
+            favicon.href = "/static/teamlogo/suwon.png";
+        } else if (teamname === "수원FC") {
+            favicon.href = "/static/teamlogo/suwonFC.png";
+        } else if (teamname === "울산") {
+            favicon.href = "/static/teamlogo/ulsan.png";
+        }
+        leftColumnImage.src = favicon.href;
+    </script>
+</body>
+</html>

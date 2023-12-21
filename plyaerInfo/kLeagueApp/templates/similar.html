@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stat {{teamname}}{{player}}</title>
+    <link id="favicon" rel="icon" href="/static/teamlogo/gangwon.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+    background-image: url("/static/player_backIMG.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+    .home_button img {
+        position: absolute;
+        left: 30px;
+        top: 30px;
+        height: 30px;
+        width: 30px;
+    }
+
+    .home_button img:hover {
+        box-shadow: 2px 2px 20px #858383;
+        transition: 0.3s;
+    }
+
+    .back_button img {
+        position: absolute;
+        left: 70px;
+        top: 30px;
+        height: 30px;
+        width: 30px;
+    }
+
+    .back_button img:hover {
+        box-shadow: 2px 2px 20px #858383;
+        transition: 0.3s;
+    }
+
+
+    .chart-container {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    canvas {
+        width: 800px;
+        max-width: none;
+        height: auto;
+    }
+
+        .sidebar {
+    position: absolute;
+    left: 70px;
+    top: 100px;
+    height: 350px;
+    width: 350px;
+            background-color: rgba(95, 95, 229, 0);
+        }
+        .sidebar img {
+        width: 100%; /* 부모 요소인 sidebar의 너비에 맞게 이미지 너비 조절 */
+        height: 80%; /* 부모 요소인 sidebar의 높이의 80%로 이미지 높이 조절 */
+        object-fit: contain; /* 이미지가 잘리지 않고 채워지도록 설정 */
+        object-position: center top; /* 이미지를 가운데 정렬하고 위쪽에 맞춥니다. */
+    }
+        .sidebar .text {
+        padding: 5px;
+        text-align: center;
+            font-size: 30px;
+            color: white;
+    }
+                .sidebar2 {
+    position: absolute;
+    left: 460px;
+    top: 100px;
+    height: 350px;
+    width: 350px;
+            background-color: rgba(95, 95, 229, 0);
+        }
+                .sidebar2 img {
+        width: 100%; /* 부모 요소인 sidebar의 너비에 맞게 이미지 너비 조절 */
+        height: 80%; /* 부모 요소인 sidebar의 높이의 80%로 이미지 높이 조절 */
+        object-fit: contain; /* 이미지가 잘리지 않고 채워지도록 설정 */
+        object-position: center top; /* 이미지를 가운데 정렬하고 위쪽에 맞춥니다. */
+    }
+                        .sidebar2 .text {
+        padding: 5px;
+        text-align: center;
+            font-size: 30px;
+            color: white;
+    }
+                .sidebar3 {
+    position: absolute;
+    left: 70px;
+    top: 460px;
+    height: 350px;
+    width: 350px;
+            background-color: rgba(95, 95, 229, 0);
+        }
+                .sidebar3 img {
+        width: 100%; /* 부모 요소인 sidebar의 너비에 맞게 이미지 너비 조절 */
+        height: 80%; /* 부모 요소인 sidebar의 높이의 80%로 이미지 높이 조절 */
+        object-fit: contain; /* 이미지가 잘리지 않고 채워지도록 설정 */
+        object-position: center top; /* 이미지를 가운데 정렬하고 위쪽에 맞춥니다. */
+    }
+                        .sidebar3 .text {
+        padding: 5px;
+        text-align: center;
+            font-size: 30px;
+            color: white;
+    }
+        .sidebar4 {
+    position: absolute;
+    left: 460px;
+    top: 460px;
+    height: 350px;
+    width: 350px;
+            background-color: rgba(95, 95, 229, 0);
+        }
+        .sidebar4 img {
+        width: 100%; /* 부모 요소인 sidebar의 너비에 맞게 이미지 너비 조절 */
+        height: 80%; /* 부모 요소인 sidebar의 높이의 80%로 이미지 높이 조절 */
+        object-fit: contain; /* 이미지가 잘리지 않고 채워지도록 설정 */
+        object-position: center top; /* 이미지를 가운데 정렬하고 위쪽에 맞춥니다. */
+    }
+                .sidebar4 .text {
+        padding: 5px;
+        text-align: center;
+            font-size: 30px;
+            color: white;
+    }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <img src="{{playerRecord.iloc[0,7]}}" alt="Your Image">
+        <div class="text">
+            <p>{{playerRecord.iloc[0,0]}} {{playerRecord.iloc[0,6]}}</p>
+        </div>
+    </div>
+<div class="sidebar2">
+        <img src="{{playerRecord.iloc[1,7]}}" alt="Your Image">
+        <div class="text">
+            <p>{{playerRecord.iloc[1,0]}} {{playerRecord.iloc[1,6]}}</p>
+        </div>
+</div>
+<div class="sidebar3">
+        <img src="{{playerRecord.iloc[2,7]}}" alt="Your Image">
+        <div class="text">
+            <p>{{playerRecord.iloc[2,0]}} {{playerRecord.iloc[2,6]}}</p>
+        </div>
+</div>
+<div class="sidebar4">
+        <img src="{{playerRecord.iloc[3,7]}}" alt="Your Image">
+        <div class="text">
+            <p>{{playerRecord.iloc[3,0]}} {{playerRecord.iloc[3,6]}}</p>
+        </div>
+</div>
+    <div class="home_button">
+        <a href="{{ url_for('searchPage')}}">
+            <img src="/static/homeLogo4.png" alt="Home">
+        </a>
+    </div>
+    <div class="back_button">
+        <a href="{{ url_for('showPlayerInfo',teamname=teamname,player=player)}}">
+            <img src="/static/backLogo.png" alt="Home">
+        </a>
+    </div>
+    <div class="chart-container">
+        <canvas id="radarChart"></canvas>
+    </div>
+
+</body>
+<script>
+    var playerStat = {{ playerStat | tojson | safe }};
+    var labels = {{ stat_labels | tojson | safe }};
+    var datasets = playerStat.map(function(player, i) {
+        var playerName = player['이름'];
+        delete player['이름'];
+
+        return {
+            label: playerName,
+            data: Object.values(player),
+            borderColor: 'rgba(' + [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), 1] + ')',
+            backgroundColor: 'rgba(' + [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), 0.2] + ')'
+        };
+    });
+
+    var ctx = document.getElementById('radarChart').getContext('2d');
+    var radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            scale: {
+                pointLabels: {
+                    fontSize: 100
+                },
+                ticks: {
+                    beginAtZero: true,
+                    fontSize: 100
+                }
+            }
+        }
+    });
+
+    var teamname = "{{teamname}}";
+    var favicon = document.getElementById("favicon");
+    var leftColumnImage = document.querySelector(".top-left img");
+    if (teamname === "강원") {
+        favicon.href = "/static/teamlogo/gangwon.png";
+    } else if (teamname === "대구") {
+        favicon.href = "/static/teamlogo/daegu.png";
+    } else if (teamname === "대전") {
+        favicon.href = "/static/teamlogo/daejeon.png";
+    } else if (teamname === "인천") {
+        favicon.href = "/static/teamlogo/incheon.png";
+    } else if (teamname === "제주") {
+        favicon.href = "/static/teamlogo/jeju.png";
+    } else if (teamname === "전북") {
+        favicon.href = "/static/teamlogo/jeonbuk.png";
+    } else if (teamname === "광주") {
+        favicon.href = "/static/teamlogo/kwangju.png";
+    } else if (teamname === "포항") {
+        favicon.href = "/static/teamlogo/pohang.png";
+    } else if (teamname === "서울") {
+        favicon.href = "/static/teamlogo/seoul.png";
+    } else if (teamname === "수원") {
+        favicon.href = "/static/teamlogo/suwon.png";
+    } else if (teamname === "수원FC") {
+        favicon.href = "/static/teamlogo/suwonFC.png";
+    } else if (teamname === "울산") {
+        favicon.href = "/static/teamlogo/ulsan.png";
+    }
+    leftColumnImage.src = favicon.href;
+</script>
+</html>

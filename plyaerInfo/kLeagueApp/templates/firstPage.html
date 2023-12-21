@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>K LEAGUE</title>
+    <link rel="icon" href="/static/kLogo.png" type="image/png">
+    <style>
+        body {
+            background-image: url("/static/k_league_LOGO.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+        }
+
+        .ocean {
+            height: 5%;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: #030E3AFF;
+        }
+
+        .wave {
+            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+            position: absolute;
+            width: 6400px;
+            top: -100px; /* Adjust this value to move the waves lower */
+            left: 0;
+            height: 198px;
+            transform: translate(0, 0, 0);
+            animation: wave 10s ease infinite;
+        }
+
+        .wave:nth-of-type(2) {
+            top: -70px; /* Adjust this value for the second wave */
+            animation: swell 10s ease infinite;
+            opacity: 1;
+        }
+
+        @keyframes wave {
+            0% { margin-left: 0; }
+            100% { margin-left: -1600px; }
+        }
+
+        @keyframes swell {
+            0%, 100% {
+                transform: translate(0, -30px);
+            }
+            50% {
+                transform: translate(0, 5px);
+            }
+        }
+
+        .content {
+            background-color: #4DA8A5F7;
+            padding: 20px;
+            width: 80%;
+            height: 80%;
+            max-width: 800px; /* Specify the maximum width */
+            max-height: 350px; /* Specify the maximum height */
+            border-radius: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Center the content */
+            opacity: 0; /* Initial opacity set to 0 */
+            animation: fadeIn 3s ease forwards; /* Animation to gradually increase opacity */
+        }
+
+        .content-title {
+            color: white; /* Set the text color to white */
+            font-size: 35px; /* Adjust the font size as needed */
+            text-align: center; /* Center the text horizontally */
+            margin: 30px; /* Remove any default margin */
+        }
+
+        .team-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 100%; /* Expand to maximum width */
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .team-button {
+            border: 1px solid white;
+            background-color: #519d72;
+            color: white;
+            padding: 20px 60px;
+            cursor: pointer;
+            border-radius: 7px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .team-button:hover {
+            background-color: #5f5fe5;
+            box-shadow: 2px 2px 25px #e8e8a2;
+            transition: 0.3s;
+            color: white;
+        }
+
+        .team-button:active {
+            background-color: #015cbd;
+        }
+
+        .home_button img {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            height: 30px; /* Adjust the height as needed */
+            width: 30px;  /* Adjust the width as needed */
+        }
+        .home_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+        .back_button img {
+            position: absolute;
+            left: 70px;
+            top: 30px;
+            height: 30px;
+            width: 30px;
+        }
+
+        .back_button img:hover {
+            box-shadow: 2px 2px 20px #858383;
+            transition: 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+     <div class="home_button">
+        <a href="{{ url_for('searchPage') }}">
+            <img src="/static/homeLogo4.png" alt="Home">
+        </a>
+    </div>
+      <div class="back_button">
+        <a href="{{ url_for('searchPage') }}">
+            <img src="/static/backLogo.png" alt="Home">
+        </a>
+     </div>
+    <div class="content">
+        <p class="content-title">팀을 선택해 주세요</p>
+        <div class="team-buttons">
+            {% for team_name in team_names %}
+            <a href="{{ url_for('showPlayers', teamname=team_name) }}" class="team-button">{{ team_name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+<script>
+    const teamSelectButton = document.getElementById("teamSelectButton");
+
+    teamSelectButton.addEventListener("click", function () {
+        teamSelectButton.style.display = "none";
+    });
+</script>
+</body>
+</html>

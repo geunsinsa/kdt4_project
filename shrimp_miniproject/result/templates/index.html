@@ -1,0 +1,308 @@
+<html>
+	<head>
+		<meta charset='utf-8'></meta>
+		<title>문서</title>
+	</head>
+	<style>
+		body{
+		
+			margin:0;
+			
+		}
+		
+		*{
+			font-family: 'NanumGothic';
+		}
+		
+		.nav{
+		
+			display:inline-block;
+			margin:0px;
+			width:100%;
+			height:50px;
+			background: rgba(240,240,240,0.3);
+			
+			box-shadow:1px 1px 2px rgba(0,0,0,0.3);
+			
+		}
+		
+		.nav .title{
+			font-size:26px;
+			padding:10px;
+			font-weight:bold;
+		}
+		
+		.body{
+			
+			padding:10px;
+			
+			box-sizing:border-box;
+			
+		}
+		
+		.body .textarea{
+		
+			outline:none;
+			border:none;
+			width:100%;
+			height:calc(100% - 100px);
+			
+			resize:none;
+			
+			font-size:25px;
+			
+		}
+		
+		.body .popup{
+			display:inline-block;
+			position:absolute;
+			
+			left:-100px;
+			top:-100px;
+			
+			background:rgba(255,255,255,0.7);
+			box-shadow:1px 1px 2px rgba(0,0,0,0.1);
+			/*width:150px;*/
+		}
+		
+		.body .popup .item{
+			display:block;
+		
+			padding:10px;
+			/*width:150px;*/
+			height:40px;
+			
+			box-sizing:border-box;
+			
+			cursor:pointer;
+			
+			
+		}
+		.body .popup .item .right{
+			float:right;
+			font-style:italic;
+			font-weight:bold;
+		
+		}
+		.body .popup .item:hover{
+			
+			
+			background:rgba(235,235,235,0.7);
+		}
+		.body .popup .item.selected{
+			animation: blinking 1s linear infinite;
+		}
+		
+		@keyframes blinking{
+			0%{
+				background:rgba(245,245,245,0.7);
+			}
+			
+			50%{
+				background:rgba(205,205,205,0.7);
+			}
+			100%{
+				background:rgba(245,245,245,0.7);
+			}
+			
+		}
+	</style>
+	<body>
+		<div class='nav'>
+			<div class='title'> 자동 완성 도구 </div>
+		</div>
+		<div class="body">
+		
+			<textarea class='textarea' id="textarea" placeholder="테스트를 입력하십시오."></textarea>
+			<div class='popup' id="popup">
+				
+				<div class='item'>
+					아이템2
+					<span class='right'>95%</span>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+	
+	
+	<script>
+	
+		function refresh_popup_location(){
+			is_showing=true;
+		
+			let textarea = document.getElementById('textarea');
+			let ecounter = textarea.value.split("\n").length-1;//엔터 횟수
+			let latest_msg ="";
+			if(ecounter>=0){
+				latest_msg = textarea.value.split("\n")[ecounter];
+			}
+			console.log(textarea.selectionStart);
+			
+			let fontsize = parseInt(getComputedStyle(textarea).getPropertyValue('font-size'));
+			var wsize = fontsize*0.85;
+			
+			let words_line = textarea.clientWidth/wsize;
+			
+			let y = textarea.value.length/ words_line ;
+			y+=ecounter;
+			y=parseInt(y);
+			
+			let x = (latest_msg.length+ecounter) % words_line ;
+			console.log(x +"," + y);
+			
+			let popup_window = document.getElementById('popup');
+			set_popup_xy((x-ecounter)*fontsize ,popup_window.style.top=90 + y*fontsize);
+			
+			
+		}
+		
+		function request_form(){
+			let textarea = document.getElementById('textarea');
+		   let request = new Request("/request/");
+            request.set_callback(function(result){
+
+               console.log(result);
+			   spx = result.split("\n");
+			   items=[]
+			   for(let i=0;i<spx.length;i++){
+					let item = spx[i];
+					let key = item.split("|")[0]
+					let percent = item.split("|")[1]
+					items.push([key,percent]);
+			   
+					refresh_popup_location();
+			   }
+			   set_item_box(items);
+			   
+				
+            });
+            request.add_data("message1",textarea.value);
+            request.request();				
+
+		}
+		
+		function set_popup_xy(x,y){
+			let popup_window = document.getElementById('popup');
+				popup_window.style.left=x  +"px";
+				popup_window.style.top=y  +"px";
+				
+		}
+		let selection_list=[];
+		let now_selected_index=-1;
+		let is_showing=false;
+		
+		
+		function set_item_box(items){
+		
+			let innerpopup = document.getElementById('popup')
+			innerpopup.innerHTML="";
+			selection_list=[];
+			now_selected_index=-1;
+			for(let i=0;i<items.length;i++){
+				let item = items[i];
+				
+				let text = item[0];
+				let percent =item[1];
+				
+				var div = document.createElement('div')
+				div.classList.add("item");
+				div.innerHTML = text + " <span class='right'>" + percent+"%</span>";
+				div.addEventListener("click",function(){
+				
+					now_selected_index=i;
+					selected_words();
+				});
+				innerpopup.appendChild(div);
+				selection_list.push([text,div]);
+			
+			}
+		
+		}
+		
+		function selected_words(){
+			console.log("OK 선택 요청");
+			let selected_element = selection_list[now_selected_index];
+			let textarea = document.getElementById('textarea');
+			textarea.value=textarea.value + selected_element[0];
+			
+			now_selected_index=-1;
+			
+			set_popup_xy(-1000,-1000);
+			is_showing=false;
+			
+			
+		}
+		
+		function apply_index_selected(index){
+			
+			for(let i=0;i<selection_list.length;i++){
+				let selection = selection_list[i];
+				selection[1].classList.remove("selected");
+			}
+			
+			selection_list[index][1].classList.add("selected");
+		}
+		
+		function change_selected_index(keycode){
+			console.log("OK : " +keycode);
+			if(keycode==38){
+				now_selected_index-=1;
+				if(now_selected_index<=0)
+					now_selected_index=0;
+				apply_index_selected(now_selected_index);
+			}
+			if(keycode==40){
+				now_selected_index+=1;
+				if(now_selected_index>=selection_list.length-1)
+					now_selected_index=selection_list.length-1
+				apply_index_selected(now_selected_index);
+			}
+			console.log("아래키가 눌렷습니다.");
+		}
+		
+		window.addEventListener("load",function(){
+			
+			console.log("내부 이벤트를 등록합니다.");
+			
+			let textarea = document.getElementById('textarea');
+			textarea.addEventListener("keydown",function(e){
+			
+				if(e.keyCode==38 || e.keyCode==40){
+					change_selected_index(e.keyCode);
+					e.preventDefault();
+					return false;
+				}else if(e.keyCode==13){
+				
+					//그냥 일반 엔터 요청이면 엔터 되게끔
+					if(now_selected_index==-1){
+						refresh_popup_location();
+					
+						return false;
+					}
+
+					if(is_showing){
+							//해당 단어의 선택인 경우
+							selected_words();
+							e.preventDefault();
+					}
+					return false;
+				
+				}else{
+				
+					setTimeout(function(){
+						
+							request_form();
+					},100);
+					
+				}
+		
+			});
+			
+			
+		
+		});
+	</script>
+	
+	<script src="/static/request.js"></script>
+</html>
